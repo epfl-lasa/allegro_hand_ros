@@ -1,0 +1,49 @@
+<launch>
+  <!--
+       Required arguments:
+          HAND:=right|left
+       Suggested arguments:
+          NUM:=0|1|...
+          VISUALIZE:=true|false  (Launch rviz)
+
+       This script launches the following nodes:
+         - state publisher (for TF information)
+           -->
+
+  <!-- Visualization with rviz, only if arg VISUALIZE is set to true. Default is
+  false, the allegro_viz.launch can be started separated. -->
+  <arg name="NUM" default='1'/>
+  <arg name="HAND" default='right'/>
+  <arg name="VISUALIZE" default="true" />
+
+ <!--
+  <include file="$(find allegro_hand_controllers)/launch/allegro_viz.launch"
+   if="$(arg VISUALIZE)">
+   <arg name="NUM" value="$(arg NUM)" />
+ </include>
+-->
+
+   <node name="rviz_$(arg NUM)"
+        pkg="rviz" type="rviz"
+        args="-d $(find allegro_hand_description)/allegro_hand_config_$(arg NUM).rviz" >
+    <remap from="/tf" to="/allegroHand_$(arg NUM)/tf"/>
+  </node>
+
+  <!-- Load the robot description directly from the xacro file. (NOTE: store it
+  in two parameter names.) -->
+  <param name="/allegroHand_$(arg NUM)/robot_description"
+   command="$(find xacro)/xacro.py
+   $(find allegro_hand_description)/allegro_hand_description_$(arg HAND).xacro"/>
+
+
+   <!-- Joint States (angles) to Joint Transforms -->
+   <node name="jointState2tf_$(arg NUM)"
+    pkg="robot_state_publisher"
+    type="robot_state_publisher"> 
+    <remap from="robot_description" to="/allegroHand_$(arg NUM)/robot_description" />
+    <remap from="/tf" to="/allegroHand_$(arg NUM)/tf"/>
+    <remap from="/joint_states" to="/allegroHand/joint_states"/>
+
+  </node>
+
+</launch>
