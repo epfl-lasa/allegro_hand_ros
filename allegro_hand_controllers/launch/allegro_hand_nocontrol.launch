@@ -26,7 +26,7 @@
    <node name="rviz_$(arg NUM)"
         pkg="rviz" type="rviz"
         args="-d $(find allegro_hand_description)/allegro_hand_config_$(arg NUM).rviz" >
-    <remap from="/tf" to="/allegroHand_$(arg NUM)/tf"/>
+    <!-- <remap from="/tf" to="/allegroHand_$(arg NUM)/tf"/> -->
   </node>
 
   <!-- Load the robot description directly from the xacro file. (NOTE: store it
@@ -41,8 +41,9 @@
     pkg="robot_state_publisher"
     type="robot_state_publisher"> 
     <remap from="robot_description" to="/allegroHand_$(arg NUM)/robot_description" />
-    <remap from="/tf" to="/allegroHand_$(arg NUM)/tf"/>
+    <!-- <remap from="/tf" to="/allegroHand_$(arg NUM)/tf"/> -->
     <remap from="/joint_states" to="/allegroHand/joint_states"/>
+    <!-- <remap from="tf_prefix" to="/allegroHand_$(arg NUM)" /> -->
 
   </node>
 

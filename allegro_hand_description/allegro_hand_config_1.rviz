@@ -219,6 +219,8 @@ Visualization Manager:
           Value: true
         link_9.0:
           Value: true
+        world:
+          Value: true
       Marker Scale: 0.1
       Name: TF
       Show Arrows: false
@@ -250,6 +252,8 @@ Visualization Manager:
                 link_11.0:
                   link_11.0_tip:
                     {}
+          world:
+            {}
       Update Interval: 0
       Value: true
     - Class: rviz/MarkerArray
@@ -280,7 +284,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.453598
+      Distance: 0.568993
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
@@ -292,10 +296,10 @@ Visualization Manager:
         Z: -0.0274769
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.284797
+      Pitch: 0.344797
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.375396
+      Yaw: 0.130395
     Saved: ~
 Window Geometry:
   Displays:
@@ -313,5 +317,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1232
-  X: 2382
-  Y: 110
+  X: 2467
+  Y: 108
