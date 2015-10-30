@@ -224,7 +224,7 @@ Visualization Manager:
       Marker Scale: 0.1
       Name: TF
       Show Arrows: false
-      Show Axes: true
+      Show Axes: false
       Show Names: false
       Tree:
         base_link:
@@ -261,7 +261,7 @@ Visualization Manager:
       Marker Topic: /visualization_marker
       Name: MarkerArray
       Namespaces:
-        my_namespace: true
+        {}
       Queue Size: 100
       Value: true
   Enabled: true
@@ -317,5 +317,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1232
-  X: 2467
-  Y: 108
+  X: 2457
+  Y: 98

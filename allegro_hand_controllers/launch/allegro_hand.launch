@@ -109,7 +109,7 @@
         pkg="robot_state_publisher"
         type="robot_state_publisher"> 
     <remap from="robot_description" to="/allegroHand_$(arg NUM)/robot_description" />
-    <remap from="/tf" to="/allegroHand_$(arg NUM)/tf"/>
+    <!-- <remap from="/tf" to="/allegroHand_$(arg NUM)/tf"/> -->
     <remap from="/joint_states" to="/allegroHand_$(arg NUM)/joint_states"/>
   </node>
 
