@@ -1,0 +1,86 @@
+<launch>
+    <!-- which hand (left/right) -->
+    <arg name="hand"/>
+
+    <!-- Visualization with rviz. Default is false. -->
+    <arg name ="visualize" default="false" />
+
+    <!-- Select the robot -->
+    <arg name="robot_name" default="allegro_hand_$(arg hand)"/>
+
+    <!-- Select the gazebo controller -->
+    <arg name="controller" default="PositionController"/>
+
+    <!-- Is this Gazebo Client? -->
+    <arg name="gzclient" default="false"/>
+
+    <!-- Global z offset -->
+    <arg name="global_z" default="0"/>
+
+    <!-- Select the hardware interface -->
+    <arg name="hardware_interface" value="EffortJointInterface"
+        if="$(eval (controller == 'TorqueController')
+             or (controller == 'PositionTorqueController'))"
+    />
+    <arg name="hardware_interface" value="PositionJointInterface"
+        if="$(eval controller == 'PositionController')"
+    />
+    <arg name="hardware_interface" value="EffortJointInterface"
+        unless="$(eval (controller == 'TorqueController')
+                 or (controller == 'PositionTorqueController')
+                 or (controller == 'PositionController'))"
+    />
+
+    <!-- Upload allegro_hand URDF -->
+    <include file="$(find allegro_hand_description)/launch/allegro_hand_upload.launch">
+        <arg name="hardware_interface"  value="$(arg hardware_interface)"/>
+        <arg name="robot_name"          value="$(arg robot_name)"/>
+        <arg name="hand"                value="$(arg hand)"/>
+        <arg name="fix_to_world"        value="false"
+             if="$(arg gzclient)" />
+    </include>
+
+    <!-- RVIZ -->
+    <node if="$(arg visualize)" 
+        ns="$(arg robot_name)" name="rviz"
+        pkg="rviz" type="rviz"
+        args="-d $(find allegro_hand_description)/allegro_hand_config.rviz" >
+    </node>
+    <node ns="$(arg robot_name)" name="rviz_gazebo_contacts"
+        pkg="allegro_hand_gazebo" type="rviz_gazebo_contacts.py" output="screen"/>
+
+    <!-- Launch Gazebo if not client -->
+    <include unless="$(arg gzclient)"
+        file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find allegro_hand_description)/worlds/allegro.world"/>
+        <arg name="debug" value="false" />
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true" />
+        <arg name="gui_required" value="true"/>
+    </include>
+
+    <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+    <node name="$(arg robot_name)_urdf_spawner" pkg="gazebo_ros"
+        type="spawn_model" respawn="false" output="screen"
+        args="-urdf -model $(arg robot_name) -param /$(arg robot_name)/robot_description
+                -z $(arg global_z)"
+    />
+
+    <!-- Spawn Gazebo Controllers -->
+    <!-- <include file="$(find timed_roslaunch)/launch/timed_roslaunch.launch">
+        <arg name="time" value="2" />
+        <arg name="pkg" value="turtlebot_navigation" />
+        <arg name="file" value="amcl_demo.launch" />
+        <arg name="value"
+            value="robot_name:=$(arg robot_name)
+                   controller:=$(arg controller)"
+        />
+    </include> -->
+
+    <include file="$(find allegro_hand_controllers)/launch/allegro_hand_control.launch">
+        <arg name="robot_name" value="$(arg robot_name)"/>
+        <arg name="controller" value="$(arg controller)"/>
+    </include>
+
+</launch>

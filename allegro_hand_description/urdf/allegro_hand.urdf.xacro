@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<robot name="allegro_hand" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<!-- Import Rviz colors -->
+	<!-- <xacro:include filename="$(find allegro_hand_description)/urdf/materials.xacro" /> -->
+	
+	<!-- <xacro:arg name="hardware_interface" default="JointStateInterface"/> -->
+	<xacro:arg name="hardware_interface" default="EffortJointInterface"/>
+	<xacro:arg name="robot_name" default="allegro_hand"/>
+	<xacro:arg name="hand" default="right"/>
+	<xacro:arg name="origin_xyz" default="[0, 0, 0]"/>
+	<xacro:arg name="origin_rpy" default="[0, 0, 0]"/>
+	<xacro:arg name="fix_to_world" default="true"/>
+
+	<!--Import the allegro_hand macro -->
+	<xacro:include
+        filename="$(find allegro_hand_description)/urdf/allegro_hand_description_$(arg hand).xacro"/>
+
+	<!-- Parent Link -->
+	<xacro:if value="$(arg fix_to_world)">
+		<xacro:arg name="parent" default="world"/>
+	</xacro:if>
+	<xacro:unless value="$(arg fix_to_world)">
+		<xacro:arg name="parent" default="allegro_hand_base"/>
+	</xacro:unless>
+
+	<!-- Fix to world just for testing -->
+	<link name="$(arg parent)"/>
+
+	<!--iiwa-->
+	<xacro:allegro_hand
+        hw_interface="$(arg hardware_interface)"
+		robot_name="$(arg robot_name)"
+        parent="$(arg parent)"
+		xyz="${$(arg origin_xyz)}"
+		rpy="${$(arg origin_rpy)}"/>
+
+</robot>

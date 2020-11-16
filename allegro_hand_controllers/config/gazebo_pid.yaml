@@ -1,0 +1,33 @@
+gazebo_ros_control/pid_gains:
+    finger_0/joint_0: {p: 0.1, i: 0.01, d: 0.01}
+    finger_0/joint_1: {p: 0.1, i: 0.01, d: 0.01}
+    finger_0/joint_2: {p: 0.1, i: 0.01, d: 0.01}
+    finger_0/joint_3: {p: 0.1, i: 0.01, d: 0.01}
+    finger_1/joint_0: {p: 0.1, i: 0.01, d: 0.01}
+    finger_1/joint_1: {p: 0.1, i: 0.01, d: 0.01}
+    finger_1/joint_2: {p: 0.1, i: 0.01, d: 0.01}
+    finger_1/joint_3: {p: 0.1, i: 0.01, d: 0.01}
+    finger_2/joint_0: {p: 0.1, i: 0.01, d: 0.01}
+    finger_2/joint_1: {p: 0.1, i: 0.01, d: 0.01}
+    finger_2/joint_2: {p: 0.1, i: 0.01, d: 0.01}
+    finger_2/joint_3: {p: 0.1, i: 0.01, d: 0.01}
+    finger_3/joint_0: {p: 0.1, i: 0.01, d: 0.01}
+    finger_3/joint_1: {p: 0.1, i: 0.01, d: 0.01}
+    finger_3/joint_2: {p: 0.1, i: 0.01, d: 0.01}
+    finger_3/joint_3: {p: 0.1, i: 0.01, d: 0.01}
+    # finger_0/joint_0: {p: 600.0 , i: 0.1, d: 15}
+    # finger_0/joint_1: {p: 600.0 , i: 0.1, d: 20}
+    # finger_0/joint_2: {p: 600.0 , i: 0.1, d: 15}
+    # finger_0/joint_3: {p: 1000.0, i: 0.1, d: 15}
+    # finger_1/joint_0: {p: 600.0 , i: 0.1, d: 15}
+    # finger_1/joint_1: {p: 600.0 , i: 0.1, d: 20}
+    # finger_1/joint_2: {p: 600.0 , i: 0.1, d: 15}
+    # finger_1/joint_3: {p: 1000.0, i: 0.1, d: 15}
+    # finger_2/joint_0: {p: 600.0 , i: 0.1, d: 15}
+    # finger_2/joint_1: {p: 600.0 , i: 0.1, d: 20}
+    # finger_2/joint_2: {p: 600.0 , i: 0.1, d: 15}
+    # finger_2/joint_3: {p: 1000.0, i: 0.1, d: 15}
+    # finger_3/joint_0: {p: 1000.0, i: 0.1, d: 30}
+    # finger_3/joint_1: {p: 1000.0, i: 0.1, d: 20}
+    # finger_3/joint_2: {p: 1000.0, i: 0.1, d: 20}
+    # finger_3/joint_3: {p: 600.0 , i: 0.1, d: 15} 

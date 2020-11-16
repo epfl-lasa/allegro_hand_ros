@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <!-- This launch file just loads the URDF with the given hardware interface and robot name into the ROS Parameter Server -->
+    <arg name="hardware_interface"  default="EffortJointInterface"/>
+    <arg name="robot_name"          default="allegro_hand"/>
+    <arg name="hand"                default="right"/>
+    <arg name="origin_xyz"          default="'[0, 0, 0]'"/>
+    <arg name="origin_rpy"          default="'[0, 0, 0]'"/>
+    <arg name="fix_to_world"        default="true"/>
+
+    <param name="/$(arg robot_name)/robot_description"
+        command="$(find xacro)/xacro --inorder
+                '$(find allegro_hand_description)/urdf/allegro_hand.urdf.xacro'
+                hand:=$(arg hand)
+                robot_name:=$(arg robot_name)
+                hardware_interface:=$(arg hardware_interface)
+	            origin_xyz:=$(arg origin_xyz)
+	            origin_rpy:=$(arg origin_rpy)
+                fix_to_world:=$(arg fix_to_world)"/>
+</launch>

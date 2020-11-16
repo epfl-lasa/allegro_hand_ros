@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="robot_name" default="allegro_hand"/>
+
+    <!-- Select the gazebo controller -->
+    <arg name="controller" default="PositionController"/>
+
+    <group ns="/$(arg robot_name)">
+        <rosparam command="load"
+            file="$(find allegro_hand_controllers)/config/gazebo_pid.yaml"/>
+        
+        <!-- Load joint controller configurations from YAML file to parameter server -->
+        <rosparam command="load" subst_value="true"
+            file="$(find allegro_hand_controllers)/config/allegro_hand_control.yaml"/>
+
+        <!-- load the controllers -->
+        <node name="robot_controller" pkg="controller_manager"
+            type="spawner" respawn="false" output="screen" 
+            args="joint_state_controller
+                  $(arg controller)"/>
+
+        <!-- convert joint states to TF transforms for rviz, etc -->
+        <node name="robot_state_publisher"
+            pkg="robot_state_publisher"
+            type="robot_state_publisher"
+            respawn="false" output="screen">
+            <remap from="joint_states" to="/$(arg robot_name)/joint_states"/>
+            <remap from="robot_description" to="/$(arg robot_name)/robot_description"/>
+        </node>
+    </group>
+
+</launch>

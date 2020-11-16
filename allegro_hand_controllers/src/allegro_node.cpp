@@ -7,13 +7,21 @@
 #include "allegro_hand_driver/controlAllegroHand.h"
 
 
+// std::string jointNames[DOF_JOINTS] =
+//         {
+//                 "joint_0.0", "joint_1.0", "joint_2.0", "joint_3.0",
+//                 "joint_4.0", "joint_5.0", "joint_6.0", "joint_7.0",
+//                 "joint_8.0", "joint_9.0", "joint_10.0", "joint_11.0",
+//                 "joint_12.0", "joint_13.0", "joint_14.0", "joint_15.0"
+//         };
+
 std::string jointNames[DOF_JOINTS] =
-        {
-                "joint_0.0", "joint_1.0", "joint_2.0", "joint_3.0",
-                "joint_4.0", "joint_5.0", "joint_6.0", "joint_7.0",
-                "joint_8.0", "joint_9.0", "joint_10.0", "joint_11.0",
-                "joint_12.0", "joint_13.0", "joint_14.0", "joint_15.0"
-        };
+  {
+    "finger_0/joint_0", "finger_0/joint_1", "finger_0/joint_2", "finger_0/joint_3",
+    "finger_1/joint_0", "finger_1/joint_1", "finger_1/joint_2", "finger_1/joint_3",
+    "finger_2/joint_0", "finger_2/joint_1", "finger_2/joint_2", "finger_2/joint_3",
+    "finger_3/joint_0", "finger_3/joint_1", "finger_3/joint_2", "finger_3/joint_3",
+  };
 
 
 AllegroNode::AllegroNode(bool sim /* = false */) {

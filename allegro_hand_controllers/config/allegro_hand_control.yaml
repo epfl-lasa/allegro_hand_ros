@@ -1,0 +1,99 @@
+# Publish all joint states -----------------------------------
+joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100  # in Hz
+
+# Default Controllers ------------------------------------------------
+TorqueController:
+    type: effort_controllers/JointGroupEffortController
+    joints:
+        - finger_0/joint_0
+        - finger_0/joint_1
+        - finger_0/joint_2
+        - finger_0/joint_3
+        - finger_1/joint_0
+        - finger_1/joint_1
+        - finger_1/joint_2
+        - finger_1/joint_3
+        - finger_2/joint_0
+        - finger_2/joint_1
+        - finger_2/joint_2
+        - finger_2/joint_3
+        - finger_3/joint_0
+        - finger_3/joint_1
+        - finger_3/joint_2
+        - finger_3/joint_3
+
+#--------------------------------------------------------
+PositionTorqueController:
+    type: effort_controllers/JointGroupPositionController
+    joints:
+        - finger_0/joint_0
+        - finger_0/joint_1
+        - finger_0/joint_2
+        - finger_0/joint_3
+        - finger_1/joint_0
+        - finger_1/joint_1
+        - finger_1/joint_2
+        - finger_1/joint_3
+        - finger_2/joint_0
+        - finger_2/joint_1
+        - finger_2/joint_2
+        - finger_2/joint_3
+        - finger_3/joint_0
+        - finger_3/joint_1
+        - finger_3/joint_2
+        - finger_3/joint_3
+    finger_0/joint_0: 
+        pid: {p: 600.0 , d: 15.0}
+    finger_0/joint_1: 
+        pid: {p: 600.0 , d: 20.0}
+    finger_0/joint_2: 
+        pid: {p: 600.0 , d: 15.0}
+    finger_0/joint_3: 
+        pid: {p: 1000.0, d: 15.0}
+    finger_1/joint_0: 
+        pid: {p: 600.0 , d: 15.0}
+    finger_1/joint_1: 
+        pid: {p: 600.0 , d: 20.0}
+    finger_1/joint_2: 
+        pid: {p: 600.0 , d: 15.0}
+    finger_1/joint_3: 
+        pid: {p: 1000.0, d: 15.0}
+    finger_2/joint_0: 
+        pid: {p: 600.0 , d: 15.0}
+    finger_2/joint_1: 
+        pid: {p: 600.0 , d: 20.0}
+    finger_2/joint_2: 
+        pid: {p: 600.0 , d: 15.0}
+    finger_2/joint_3: 
+        pid: {p: 1000.0, d: 15.0}
+    finger_3/joint_0: 
+        pid: {p: 1000.0, d: 30.0}
+    finger_3/joint_1: 
+        pid: {p: 1000.0, d: 20.0}
+    finger_3/joint_2: 
+        pid: {p: 1000.0, d: 20.0}
+    finger_3/joint_3: 
+        pid: {p: 600.0 , d: 15.0}
+
+#--------------------------------------------------------
+PositionController:
+    type: position_controllers/JointGroupPositionController
+    joints:
+        - finger_0/joint_0
+        - finger_0/joint_1
+        - finger_0/joint_2
+        - finger_0/joint_3
+        - finger_1/joint_0
+        - finger_1/joint_1
+        - finger_1/joint_2
+        - finger_1/joint_3
+        - finger_2/joint_0
+        - finger_2/joint_1
+        - finger_2/joint_2
+        - finger_2/joint_3
+        - finger_3/joint_0
+        - finger_3/joint_1
+        - finger_3/joint_2
+        - finger_3/joint_3

@@ -1,0 +1,747 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="allegro_hand_right">
+    <xacro:include filename="$(find allegro_hand_description)/urdf/common.xacro"/>
+    <xacro:include filename="$(find allegro_hand_description)/urdf/allegro_hand.gazebo.xacro"/>
+
+    <xacro:property name="DEG2RAD" value="0.01745329251"/>
+
+    <!-- mesh / simple -->
+    <xacro:property name="collision_type" value='mesh'/>
+
+    <!-- ======================== BASE PARAMS ========================= -->
+    <xacro:property name="palm_link_z" value="0.095"/>
+
+    <!-- ======================== FINGER PARAMS ======================== -->
+    <xacro:property name="links_margin" value="0.01"/>
+    <xacro:property name="links_x" value="0.0196"/>
+    <xacro:property name="links_y" value="0.0275"/>
+    <xacro:property name="link0_z" value="0.0164"/>
+    <xacro:property name="link1_z" value="0.0540"/>
+    <xacro:property name="link2_z" value="0.0384"/>
+
+    <xacro:property name="links_r" value="${0.025/2}"/>
+    <xacro:property name="link0_z_actual" value="0.02"/>
+    <xacro:property name="link1_z" value="0.0540"/>
+    <xacro:property name="link2_z" value="0.0384"/>
+
+    <!-- full height from joint to tip. when used,
+         the radius of the finger tip sphere will be subtracted
+         and one fixed link will be added for the tip. -->
+    <xacro:property name="link3_z" value="0.0387"/>
+    <xacro:property name="fingerTip_r" value="0.0120"/>
+    <xacro:property name="offset_origin_x_const" value="0"/>
+    <xacro:property name="offset_origin_y_const" value="0.0435"/>
+    <xacro:property name="offset_origin_z_const" value="-0.001542"/>
+    <xacro:property name="offset_origin_z_mid_const" value="0.0007"/>
+
+    <!-- ========================= THUMB PARAMS ========================= -->
+    <xacro:property name="links_t_margin" value="0.01"/>
+    <xacro:property name="link0_t_r" value="${0.0340 / 2}"/>
+    <xacro:property name="link0_t_x" value="0.0358"/>
+    <xacro:property name="link0_t_y" value="0.0340"/>
+    <xacro:property name="link0_t_z" value="0.0455"/>
+    <xacro:property name="link1_t_z" value="0.0177"/>
+    <xacro:property name="link2_t_z" value="0.0514"/>
+    <xacro:property name="link3_t_z" value="0.0543"/>
+
+    <!-- ========================= LIMITS ========================= -->
+    <xacro:property name="joint_safety_margin" value="0"/>
+    <xacro:property name="limit_0_up" value="${26.92*DEG2RAD}"/>
+    <xacro:property name="limit_0_low" value="${-26.92*DEG2RAD}"/>
+    <xacro:property name="limit_1_up" value="${92.25*DEG2RAD}"/>
+    <xacro:property name="limit_1_low" value="${-11.22*DEG2RAD}"/>
+    <xacro:property name="limit_2_up" value="${97.92*DEG2RAD}"/>
+    <xacro:property name="limit_2_low" value="${-9.97*DEG2RAD}"/>
+    <xacro:property name="limit_3_up" value="${92.7*DEG2RAD}"/>
+    <xacro:property name="limit_3_low" value="${-13*DEG2RAD}"/>
+
+    <xacro:property name="limit_0_t_up" value="${85*DEG2RAD}"/>
+    <xacro:property name="limit_0_t_low" value="${-1*DEG2RAD}"/>
+    <xacro:property name="limit_1_t_up" value="${72*DEG2RAD}"/>
+    <xacro:property name="limit_1_t_low" value="${-10*DEG2RAD}"/>
+    <xacro:property name="limit_2_t_up" value="${94*DEG2RAD}"/>
+    <xacro:property name="limit_2_t_low" value="${-10.8*DEG2RAD}"/>
+    <xacro:property name="limit_3_t_up" value="${98*DEG2RAD}"/>
+    <xacro:property name="limit_3_t_low" value="${-5*DEG2RAD}"/>
+
+
+    <!-- <xacro:property name="joint_safety_margin" value="0.1"/>
+    <xacro:property name="limit_0_up" value="0.57"/>
+    <xacro:property name="limit_0_low" value="-0.57"/>
+    <xacro:property name="limit_1_up" value="1.71"/>
+    <xacro:property name="limit_1_low" value="-0.296"/>
+    <xacro:property name="limit_2_up" value="1.809"/>
+    <xacro:property name="limit_2_low" value="-0.274"/>
+    <xacro:property name="limit_3_up" value="1.718"/>
+    <xacro:property name="limit_3_low" value=" -0.327"/>
+
+    <xacro:property name="limit_0_t_up" value="1.496"/>
+    <xacro:property name="limit_0_t_low" value="0.363"/>
+    <xacro:property name="limit_1_t_up" value="1.263"/>
+    <xacro:property name="limit_1_t_low" value="-0.205"/>
+    <xacro:property name="limit_2_t_up" value="1.744"/>
+    <xacro:property name="limit_2_t_low" value="-0.289"/>
+    <xacro:property name="limit_3_t_up" value="1.819"/>
+    <xacro:property name="limit_3_t_low" value="-0.262"/> -->
+    
+    <xacro:property name="joint_damping" value="0.05"/>
+    <xacro:property name="joint_friction" value="0.00"/>
+
+    <!-- ============================================================================= -->
+
+    <!-- THUMB MACRO -->
+    <xacro:macro name="thumb_right"
+                 params="finger_num
+                         robot_name
+                         offset_origin_x 
+                         offset_origin_y 
+                         offset_origin_z 
+                         finger_angle_r 
+                         finger_angle_p 
+                         finger_angle_y">
+
+        <!-- [LINK 12] -->
+        <link name="finger_${finger_num}/link_0">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/link_12.0_right.STL"/>
+                </geometry>
+                <material name="black">
+                    <color rgba=".2 .2 .2 1"/>
+                </material>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}"> 
+                <collision>
+                    <geometry>
+                        <box size="${link0_t_x} ${link0_t_y} ${link0_t_z}"/>
+                        <!-- <xacro:capsule length="${link0_t_z}" radius="${link0_t_r}" margin="${links_t_margin}"/> -->
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="${-0.0358/2+0.0} ${.018/2} ${.029/2}"/>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/link_12.0_right.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+            
+            <inertial>
+              <mass value="0.0176" />
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <inertia ixx="1.89273333333e-5" ixy="7.16716e-06" ixz="5.35568e-06"
+                       iyy="1.43008213333e-05" iyz="6.8068e-06"
+                       izz="1.89273333333e-05" />
+            </inertial>
+        </link>
+        <xacro:gz_link reference="finger_${finger_num}/link_0" collide="false"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="finger_${finger_num}/link_0"
+        />
+
+        <joint name="finger_${finger_num}/joint_0" type="revolute">
+            <axis xyz="-1 0 0"/>
+            <limit effort="15" velocity="7"
+                   lower="${limit_0_t_low + joint_safety_margin}"
+                   upper="${limit_0_t_up  - joint_safety_margin}"/>
+            <parent link="palm"/>
+            <child link="finger_${finger_num}/link_0"/>
+            <origin rpy="${finger_angle_r} ${finger_angle_p} ${finger_angle_y}"
+                    xyz="${offset_origin_x} ${offset_origin_y} ${offset_origin_z}"/>
+            <dynamics damping="${0.1*joint_damping}" friction="${0.1*joint_friction}"/>
+        </joint>
+        <xacro:gz_joint reference="finger_${finger_num}/joint_0" hw_interface="${hw_interface}"/>
+
+        <!-- [LINK 13] -->
+        <link name="finger_${finger_num}/link_1">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/link_13.0.STL"/>
+                </geometry>
+                <material name="black">
+                    <color rgba=".2 .2 .2 1"/>
+                </material>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}">
+                <collision>
+                    <geometry>
+                        <box size="${links_x} ${links_y} ${link1_t_z}"/>
+                        <!-- <xacro:capsule length="${link1_t_z}" radius="${links_r}" margin="${links_t_margin}"/> -->
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 ${link1_t_z/2}"/>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/link_13.0.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+
+            <inertial>
+              <mass value="0.0119" />
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <inertia ixx="4.24250866667e-06" ixy="1.032087e-06" ixz="1.603525e-06"
+                       iyy="4.52362633333e-06" iyz="1.44808125e-06"
+                       izz="4.24250866667e-06" />
+            </inertial>
+        </link>
+        <xacro:gz_link reference="finger_${finger_num}/link_1" collide="false"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="finger_${finger_num}/link_1"
+        />
+
+        <joint name="finger_${finger_num}/joint_1" type="revolute">
+            <axis xyz="0 0 1"/>
+            <limit effort="15" velocity="7"
+                   lower="${limit_1_t_low + joint_safety_margin}"
+                   upper="${limit_1_t_up  - joint_safety_margin}"/>
+            <parent link="finger_${finger_num}/link_0"/>
+            <child link="finger_${finger_num}/link_1"/>
+            <origin xyz="-0.027 0.005 0.0399"/>
+            <dynamics damping="${0.1*joint_damping}" friction="${0.1*joint_friction}"/>
+        </joint>
+        <xacro:gz_joint reference="finger_${finger_num}/joint_1" hw_interface="${hw_interface}"/>
+
+        <!-- [LINK 14] -->
+        <link name="finger_${finger_num}/link_2">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/link_14.0.STL"/>
+                </geometry>
+                <material name="black">
+                </material>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}"> 
+                <collision>
+                    <geometry>
+                        <box size="${links_x} ${links_y} ${link2_t_z}"/>
+                        <!-- <xacro:capsule length="${link2_t_z}" radius="${links_r}" margin="${links_t_margin}"/> -->
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 ${link2_t_z/2}"/>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/link_14.0.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+
+            <inertial>
+              <mass value="0.038" />
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <inertia ixx="4.30439933333e-05" ixy="9.57068e-06" ixz="5.1205e-06" iyy="1.44451933333e-05"
+                       iyz="1.342825e-05" izz="4.30439933333e-05" />
+            </inertial>
+        </link>
+        <xacro:gz_link reference="finger_${finger_num}/link_2" collide="true"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="finger_${finger_num}/link_2"
+        />
+
+        <joint name="finger_${finger_num}/joint_2" type="revolute">
+            <axis xyz="0 1 0"/>
+            <limit effort="15" velocity="7"
+                   lower="${limit_2_t_low + joint_safety_margin}"
+                   upper="${limit_2_t_up  - joint_safety_margin}"/>
+            <parent link="finger_${finger_num}/link_1"/>
+            <child link="finger_${finger_num}/link_2"/>
+            <origin xyz="0 0 ${link1_t_z}"/>
+            <dynamics damping="${0.1*joint_damping}" friction="${0.1*joint_friction}"/>
+        </joint>
+        <xacro:gz_joint reference="finger_${finger_num}/joint_2" hw_interface="${hw_interface}"/>
+
+        <!-- [LINK 15] -->
+        <link name="finger_${finger_num}/link_3">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/link_15.0.STL"/>
+                </geometry>
+                <material name="black">
+                </material>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}"> 
+                <collision>
+                    <geometry>
+                        <box size="${links_x} ${links_y} ${link3_t_z-fingerTip_r}"/>
+                        <!-- <xacro:capsule length="${link3_t_z-fingerTip_r}" radius="${links_r}" margin="${links_t_margin}"/> -->
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 ${(link3_t_z-fingerTip_r)/2}"/>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/link_15.0.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+
+            <inertial>
+              <mass value="0.0388" />
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <inertia ixx="3.29223173333e-05" ixy="8.042076e-06" ixz="5.2283e-06"
+                       iyy="1.47493026667e-5" iyz="1.1283525e-5"
+                       izz="3.29223173333e-05" />
+            </inertial>
+        </link>
+        <xacro:gz_link reference="finger_${finger_num}/link_3" collide="true"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="finger_${finger_num}/link_3"
+        />
+
+        <joint name="finger_${finger_num}/joint_3" type="revolute">
+            <axis xyz="0 1 0"/>
+            <limit effort="15" velocity="7"
+                   lower="${limit_3_t_low + joint_safety_margin}"
+                   upper="${limit_3_t_up  - joint_safety_margin}"/>
+            <parent link="finger_${finger_num}/link_2"/>
+            <child link="finger_${finger_num}/link_3"/>
+            <origin xyz="0 0 ${link2_t_z}"/>
+            <dynamics damping="${0.1*joint_damping}" friction="${0.1*joint_friction}"/>
+        </joint>
+        <xacro:gz_joint reference="finger_${finger_num}/joint_3" hw_interface="${hw_interface}"/>
+
+        <!-- [FINGER TIP] -->
+        <link name="finger_${finger_num}/link_tip">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/link_15.0_tip.STL"/>
+                </geometry>
+                <material name="white">
+                    <color rgba=".9 .9 .9 1"/>
+                </material>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}"> 
+                <collision>
+                    <geometry>
+                        <sphere radius="${fingerTip_r}"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/link_15.0_tip.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+
+            <inertial>
+              <mass value="0.0168" />
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <inertia ixx="9.68e-07" ixy="0" ixz="0"
+                       iyy="9.68e-07" iyz="0"
+                       izz="9.68e-07" />
+            </inertial>
+        </link>
+        <xacro:gz_link reference="finger_${finger_num}/link_tip" collide="true"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="finger_${finger_num}/link_tip"
+        />
+
+        <joint name="finger_${finger_num}/joint_tip" type="fixed">
+            <parent link="finger_${finger_num}/link_3"/>
+            <child link="finger_${finger_num}/link_tip"/>
+            <origin rpy="0 0 0" xyz="0 0 ${link3_t_z-fingerTip_r}"/>
+        </joint>
+        <gazebo reference="finger_${finger_num}/joint_tip">
+            <disableFixedJointLumping>true</disableFixedJointLumping>
+            <preserveFixedJoint>true</preserveFixedJoint>
+        </gazebo>
+
+    </xacro:macro>
+    <!-- END THUMB MACRO -->
+
+    <!-- THREE FINGER MACRO -->
+    <xacro:macro name="finger"
+                 params="finger_num 
+                         robot_name
+                         offset_origin_x 
+                         offset_origin_y 
+                         offset_origin_z 
+                         finger_angle_r">
+
+        <!-- [LINK 0, 4, 8] -->
+        <link name="finger_${finger_num}/link_0">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/link_0.0.STL"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}"> 
+                <collision>
+                    <geometry>
+                        <box size="${links_x} ${links_y} ${link0_z}"/>
+                        <!-- <xacro:collision_box
+                            length="${link0_z_actual}"
+                            radius="${links_r}"/> -->
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 ${link0_z_actual/2}"/>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/link_0.0.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+
+            <inertial>
+                <mass value="0.0119" />
+                <xacro:cuboid_inertia
+                    height="${link0_z_actual}"
+                    length="${2*links_r}"
+                    mass="0.0119"
+                    width="${2*links_r}"/>
+                <origin xyz="0 0 0.01" rpy="0 0 0"/>
+            </inertial>
+        </link>
+        <xacro:gz_link reference="finger_${finger_num}/link_0" collide="false"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="finger_${finger_num}/link_0"
+        />
+
+        <joint name="finger_${finger_num}/joint_0" type="revolute">
+            <axis xyz="0 0 1"/>
+            <limit effort="15" velocity="7"
+                   lower="${limit_0_low + joint_safety_margin}"
+                   upper="${limit_0_up  - joint_safety_margin}"/>
+            <parent link="palm"/>
+            <child link="finger_${finger_num}/link_0"/>
+            <origin rpy="${finger_angle_r} 0 0"
+                    xyz="${offset_origin_x} ${offset_origin_y} ${offset_origin_z}"/>
+            <dynamics damping="${0.1*joint_damping}" friction="${0.1*joint_friction}"/>
+        </joint>
+        <xacro:gz_joint reference="finger_${finger_num}/joint_0" hw_interface="${hw_interface}"/>
+
+        <!-- [LINK 1, 5, 9] -->
+        <link name="finger_${finger_num}/link_1">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/link_1.0.STL"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}"> 
+                <collision>
+                    <geometry>
+                        <box size="${links_x} ${links_y} ${link1_z}"/>
+                        <!-- <xacro:capsule length="${link1_z}" radius="${links_r}" margin="${links_margin}"/> -->
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 ${link1_z/2}"/>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/link_1.0.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+
+            <inertial>
+              <mass value="0.065" />
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <inertia ixx="7.95654166667e-05" ixy="1.7199e-05" ixz="8.75875e-06"
+                       iyy="2.47088833333e-05" iyz="2.413125e-05"
+                       izz="7.95654166667e-05" />
+            </inertial>
+        </link>
+        <xacro:gz_link reference="finger_${finger_num}/link_1" collide="false"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="finger_${finger_num}/link_1"
+        />
+
+        <joint name="finger_${finger_num}/joint_1" type="revolute">
+            <limit effort="15" velocity="7"
+                   lower="${limit_1_low + joint_safety_margin}"
+                   upper="${limit_1_up  - joint_safety_margin}"/>
+            <axis xyz="0 1 0"/>
+            <parent link="finger_${finger_num}/link_0"/>
+            <child link="finger_${finger_num}/link_1"/>
+            <origin xyz="0 0 ${link0_z}"/>
+            <dynamics damping="${0.1*joint_damping}" friction="${0.1*joint_friction}"/>
+        </joint>
+        <xacro:gz_joint reference="finger_${finger_num}/joint_1" hw_interface="${hw_interface}"/>
+
+        <!-- [LINK 2, 6, 10]-->
+        <link name="finger_${finger_num}/link_2">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/link_2.0.STL"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}"> 
+                <collision>
+                    <geometry>
+                        <box size="${links_x} ${links_y} ${link2_z}"/>
+                        <!-- <xacro:capsule length="${link2_z}" radius="${links_r}" margin="${links_margin}"/> -->
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 ${link2_z/2}"/>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/link_2.0.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+
+            <inertial>
+              <mass value="0.0355" />
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <inertia ixx="2.63979183333e-05" ixy="6.67968e-06" ixz="4.783625e-06"
+                       iyy="1.34948516667e-05" iyz="9.372e-06"
+                       izz="2.63979183333e-05" />
+            </inertial>
+        </link>
+        <xacro:gz_link reference="finger_${finger_num}/link_2" collide="true"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="finger_${finger_num}/link_2"
+        />
+
+        <joint name="finger_${finger_num}/joint_2" type="revolute">
+            <axis xyz="0 1 0"/>
+            <limit effort="15" velocity="7"
+                   lower="${limit_2_low + joint_safety_margin}"
+                   upper="${limit_2_up  - joint_safety_margin}"/>
+            <parent link="finger_${finger_num}/link_1"/>
+            <child link="finger_${finger_num}/link_2"/>
+            <origin xyz="0 0 ${link1_z}"/>
+            <dynamics damping="${0.1*joint_damping}" friction="${0.1*joint_friction}"/>
+        </joint>
+        <xacro:gz_joint reference="finger_${finger_num}/joint_2" hw_interface="${hw_interface}"/>
+
+        <!-- [LINK 3, 7, 11] -->
+        <link name="finger_${finger_num}/link_3">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/link_3.0.STL"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}"> 
+                <collision>
+                    <geometry>
+                        <box size="${links_x} ${links_y} ${link3_z-fingerTip_r}"/>
+                        <!-- <xacro:capsule length="${link3_z-fingerTip_r}" radius="${links_r}" margin="${links_margin}"/> -->
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 ${(link3_z-fingerTip_r)/2}"/>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/link_3.0.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+
+            <inertial>
+              <mass value="0.0096" />
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <inertia ixx="4.701248e-06" ixy="1.255968e-06" ixz="1.2936e-06"
+                       iyy="3.649312e-06" iyz="1.7622e-06"
+                       izz="4.701248e-06" />
+            </inertial>
+        </link>
+        <xacro:gz_link reference="finger_${finger_num}/link_3" collide="true"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="finger_${finger_num}/link_3"
+        />
+
+        <joint name="finger_${finger_num}/joint_3" type="revolute">
+            <axis xyz="0 1 0"/>
+            <limit effort="15" velocity="7"
+                   lower="${limit_3_low + joint_safety_margin}"
+                   upper="${limit_3_up  - joint_safety_margin}"/>
+            <parent link="finger_${finger_num}/link_2"/>
+            <child link="finger_${finger_num}/link_3"/>
+            <origin xyz="0 0 ${link2_z}"/>
+            <dynamics damping="${0.1*joint_damping}" friction="${0.1*joint_friction}"/>
+        </joint>
+        <xacro:gz_joint reference="finger_${finger_num}/joint_3" hw_interface="${hw_interface}"/>
+
+        <!-- [FINGER TIP] -->
+        <link name="finger_${finger_num}/link_tip">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/link_3.0_tip.STL"/>
+                </geometry>
+                <material name="white">
+                    <color rgba=".9 .9 .9 1"/>
+                </material>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}"> 
+                <collision>
+                    <geometry>
+                        <sphere radius="${fingerTip_r}"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/link_3.0_tip.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+
+            <inertial>
+              <mass value="0.0168" />
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <inertia ixx="9.68e-07" ixy="0" ixz="0"
+                       iyy="9.68e-07" iyz="0"
+                       izz="9.68e-07" />
+            </inertial>
+        </link>
+        <xacro:gz_link reference="finger_${finger_num}/link_tip" collide="true"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="finger_${finger_num}/link_tip"
+        />
+
+        <joint name="finger_${finger_num}/joint_tip" type="fixed">
+            <parent link="finger_${finger_num}/link_3"/>
+            <child link="finger_${finger_num}/link_tip"/>
+            <origin rpy="0 0 0" xyz="0 0 ${link3_z-fingerTip_r}"/>
+        </joint>
+        <gazebo reference="finger_${finger_num}/joint_tip">
+            <disableFixedJointLumping>true</disableFixedJointLumping>
+            <preserveFixedJoint>true</preserveFixedJoint>
+        </gazebo>
+
+    </xacro:macro>
+    <!-- [[END]] THREE FINGER MACRO -->
+
+    <!-- ============================================================================= -->
+
+    <xacro:macro name="allegro_hand"
+        params="parent hw_interface robot_name xyz rpy">
+        <xacro:allegro_hand_gazebo robot_name="${robot_name}"/>
+
+        <!-- PALM -->
+        <link name="palm">
+            <visual>
+                <geometry>
+                    <mesh filename="package://allegro_hand_description/meshes/base_link.STL"/>
+                </geometry>
+                <origin rpy="0 0 0" xyz="0 0 0 "/>
+                <material name="black">
+                    <color rgba="0.2 0.2 0.2 1"/>
+                </material>
+            </visual>
+
+            <xacro:if value="${collision_type == 'simple'}"> 
+                <collision>
+                    <origin rpy="0 0 0" xyz="-0.009300 0 -${palm_link_z/2}"/>
+                    <geometry>
+                        <box size="0.0408 0.1130 ${palm_link_z}"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collision_type == 'mesh'}"> 
+                <collision>
+                    <geometry>
+                        <mesh filename="package://allegro_hand_description/meshes/base_link.STL"/>
+                    </geometry>
+                    <origin rpy="0 0 0" xyz="0 0 0"/>
+                </collision>
+            </xacro:if>
+            
+            <inertial>
+                <origin xyz="0 0 ${palm_link_z/2}" rpy="0 0 0"/>
+                <mass value="0.4154"/>
+                <inertia
+                    ixx="1e-4" ixy="0.0" ixz="0.0"
+                    iyy="1e-4" iyz="0.0"
+                    izz="1e-4"/>
+            </inertial>
+        </link>
+        <xacro:gz_link reference="palm" collide="false"/>
+
+        <joint name="parent_joint" type="fixed">
+            <origin
+                xyz="${xyz[0]} ${xyz[1]} ${xyz[2] + palm_link_z}"
+                rpy="${rpy[0]} ${rpy[1]} ${rpy[2]}"/>
+            <parent link="${parent}"/>
+            <child link="palm"/>
+        </joint>
+
+        <!-- ============================================================================= -->
+        <!-- FINGERS -->
+        <!-- RIGHT HAND due to which finger is number 0 -->
+        <!-- for LEFT HAND switch the sign of the **offset_origin_y** and **finger_angle_r** parameters-->
+        <xacro:finger finger_num="0"
+            robot_name="${robot_name}"
+            offset_origin_x="${offset_origin_x_const}"
+            offset_origin_y="${offset_origin_y_const}"
+            offset_origin_z="${offset_origin_z_const}"
+            finger_angle_r="-${5.0*DEG2RAD}"/>
+        <xacro:finger finger_num="1"
+            robot_name="${robot_name}"
+            offset_origin_x="${offset_origin_x_const}"
+            offset_origin_y="0"
+            offset_origin_z="${offset_origin_z_mid_const}"
+            finger_angle_r="0.0"/>
+        <xacro:finger finger_num="2"
+            robot_name="${robot_name}"
+            offset_origin_x="${offset_origin_x_const}"
+            offset_origin_y="-${offset_origin_y_const}"
+            offset_origin_z="${offset_origin_z_const}"
+            finger_angle_r="${5.0*DEG2RAD}"/>
+        <!-- THUMB -->
+        <xacro:thumb_right finger_num="3"
+            robot_name="${robot_name}"
+            offset_origin_x="-0.0182"
+            offset_origin_y="0.019333"
+            offset_origin_z="-0.045987"
+            finger_angle_r="0"
+            finger_angle_p="-${95*DEG2RAD}"
+            finger_angle_y="-${90*DEG2RAD}"/>
+
+        
+       
+    </xacro:macro>
+
+</robot>

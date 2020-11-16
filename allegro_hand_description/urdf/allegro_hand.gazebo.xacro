@@ -1,0 +1,65 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- ======================== macros ========================  -->
+    <xacro:macro name="allegro_hand_gazebo" params="robot_name">
+        <!-- Control plugin -->
+        <gazebo>
+            <plugin name="allegro_hand_gazebo_ros_control" filename="libgazebo_ros_control.so">
+                <robotNamespace>/${robot_name}</robotNamespace>
+                <robotParam>/${robot_name}/robot_description</robotParam>
+                <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+                <legacyModeNS>false</legacyModeNS>
+            </plugin>
+        </gazebo>
+    </xacro:macro>
+
+    <!-- Gazebo Contact Sensor -->
+    <xacro:macro name="gz_contact_sensor" params="robot_name reference">
+        <gazebo reference="${reference}">
+            <sensor name="contact_sensor" type="contact">
+                <always_on>true</always_on>
+                <contact>
+                    <collision>${reference}_collision</collision>
+                </contact>
+                <plugin name="contact_plugin"
+                        filename="libgazebo_ros_bumper.so">
+                    <bumperTopicName>/${robot_name}/${reference}/contact</bumperTopicName>
+                    <frameName>${reference}</frameName>
+                </plugin>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+    
+    <!-- Gazebo joint configuration -->
+    <xacro:macro name="gz_joint" params="reference hw_interface">
+        <gazebo reference="${reference}">
+            <provideFeedback>true</provideFeedback>
+            <implicitSpringDamper>true</implicitSpringDamper>
+        </gazebo>
+        <transmission name="${reference}_tran">
+            <robotNamespace>/${robot_name}</robotNamespace>
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${reference}">
+                <hardwareInterface>hardware_interface/${hw_interface}</hardwareInterface>
+            </joint>
+            <actuator name="${reference}_motor">
+                <hardwareInterface>hardware_interface/${hw_interface}</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+    <!-- Gazebo link configuration -->
+    <xacro:macro name="gz_link" params="reference collide">
+        <gazebo reference="${reference}">
+            <!-- <turnGravityOff>true</turnGravityOff> -->
+            <mu1>0.05</mu1>
+            <mu2>0.05</mu2>
+            <!-- This defines the springiness of the contacts: 400000 -->
+            <kp>1000</kp>
+            <selfCollide>false</selfCollide>
+            <material>Gazebo/Grey</material>
+        </gazebo>
+    </xacro:macro>
+
+</robot>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="capsule"
+        params="length radius margin">
+        <cylinder length="${length - margin}" radius="${radius}"/>
+    </xacro:macro>
+    
+    <xacro:macro name="collision_box"
+        params="length radius">
+        <cylinder length="${length}" radius="${radius}"/>
+    </xacro:macro>
+
+    <xacro:macro name="cuboid_inertia" params="width height length mass">
+    <inertia ixx="${mass * (height * height + length * length) / 12}"
+             iyy="${mass * (width * width + length * length) / 12}"
+             izz="${mass * (width * width + height * height) / 12}"
+             ixy="0" iyz="0" ixz="0"/>
+    </xacro:macro>
+
+</robot>
