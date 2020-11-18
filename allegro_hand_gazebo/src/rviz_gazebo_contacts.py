@@ -12,6 +12,7 @@ from gazebo_msgs.msg import ContactsState
 
 
 links = [
+    "palm",
     "finger_0/link_0",
     "finger_0/link_1",
     "finger_0/link_2",

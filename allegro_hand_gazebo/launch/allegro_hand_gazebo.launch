@@ -46,7 +46,8 @@
         pkg="rviz" type="rviz"
         args="-d $(find allegro_hand_description)/allegro_hand_config.rviz" >
     </node>
-    <node ns="$(arg robot_name)" name="rviz_gazebo_contacts"
+    <node if="$(arg visualize)" 
+        ns="$(arg robot_name)" name="rviz_gazebo_contacts"
         pkg="allegro_hand_gazebo" type="rviz_gazebo_contacts.py" output="screen"/>
 
     <!-- Launch Gazebo if not client -->

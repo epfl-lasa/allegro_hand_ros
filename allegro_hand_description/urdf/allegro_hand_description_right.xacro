@@ -699,6 +699,10 @@
             </inertial>
         </link>
         <xacro:gz_link reference="palm" collide="false"/>
+        <xacro:gz_contact_sensor
+            robot_name="${robot_name}"
+            reference="palm"
+        />
 
         <joint name="parent_joint" type="fixed">
             <origin
