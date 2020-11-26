@@ -35,6 +35,9 @@
         <gazebo reference="${reference}">
             <provideFeedback>true</provideFeedback>
             <implicitSpringDamper>true</implicitSpringDamper>
+            <stopKd value="1.0" />
+            <stopKp value="1e7" />
+            <fudgeFactor value="1.0" />
         </gazebo>
         <transmission name="${reference}_tran">
             <robotNamespace>/${robot_name}</robotNamespace>
@@ -53,10 +56,11 @@
     <xacro:macro name="gz_link" params="reference collide">
         <gazebo reference="${reference}">
             <!-- <turnGravityOff>true</turnGravityOff> -->
-            <mu1>0.05</mu1>
-            <mu2>0.05</mu2>
+            <mu1>500</mu1>
+            <mu2>500</mu2>
             <!-- This defines the springiness of the contacts: 400000 -->
-            <kp>1000</kp>
+            <kp>1e8</kp>
+            <kd>1.0</kd>
             <selfCollide>false</selfCollide>
             <material>Gazebo/Grey</material>
         </gazebo>

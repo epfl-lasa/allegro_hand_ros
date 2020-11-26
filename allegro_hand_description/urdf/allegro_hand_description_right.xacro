@@ -86,6 +86,8 @@
     
     <xacro:property name="joint_damping" value="0.05"/>
     <xacro:property name="joint_friction" value="0.00"/>
+    <xacro:property name="joint_effort" value="100"/> <!-- 15 -->
+    <xacro:property name="joint_velocity" value="100"/> <!-- 7 -->
 
     <!-- ============================================================================= -->
 
@@ -146,7 +148,7 @@
 
         <joint name="finger_${finger_num}/joint_0" type="revolute">
             <axis xyz="-1 0 0"/>
-            <limit effort="15" velocity="7"
+            <limit effort="${joint_effort}" velocity="${joint_velocity}"
                    lower="${limit_0_t_low + joint_safety_margin}"
                    upper="${limit_0_t_up  - joint_safety_margin}"/>
             <parent link="palm"/>
@@ -202,7 +204,7 @@
 
         <joint name="finger_${finger_num}/joint_1" type="revolute">
             <axis xyz="0 0 1"/>
-            <limit effort="15" velocity="7"
+            <limit effort="${joint_effort}" velocity="${joint_velocity}"
                    lower="${limit_1_t_low + joint_safety_margin}"
                    upper="${limit_1_t_up  - joint_safety_margin}"/>
             <parent link="finger_${finger_num}/link_0"/>
@@ -255,7 +257,7 @@
 
         <joint name="finger_${finger_num}/joint_2" type="revolute">
             <axis xyz="0 1 0"/>
-            <limit effort="15" velocity="7"
+            <limit effort="${joint_effort}" velocity="${joint_velocity}"
                    lower="${limit_2_t_low + joint_safety_margin}"
                    upper="${limit_2_t_up  - joint_safety_margin}"/>
             <parent link="finger_${finger_num}/link_1"/>
@@ -309,7 +311,7 @@
 
         <joint name="finger_${finger_num}/joint_3" type="revolute">
             <axis xyz="0 1 0"/>
-            <limit effort="15" velocity="7"
+            <limit effort="${joint_effort}" velocity="${joint_velocity}"
                    lower="${limit_3_t_low + joint_safety_margin}"
                    upper="${limit_3_t_up  - joint_safety_margin}"/>
             <parent link="finger_${finger_num}/link_2"/>
@@ -430,7 +432,7 @@
 
         <joint name="finger_${finger_num}/joint_0" type="revolute">
             <axis xyz="0 0 1"/>
-            <limit effort="15" velocity="7"
+            <limit effort="${joint_effort}" velocity="${joint_velocity}"
                    lower="${limit_0_low + joint_safety_margin}"
                    upper="${limit_0_up  - joint_safety_margin}"/>
             <parent link="palm"/>
@@ -483,7 +485,7 @@
         />
 
         <joint name="finger_${finger_num}/joint_1" type="revolute">
-            <limit effort="15" velocity="7"
+            <limit effort="${joint_effort}" velocity="${joint_velocity}"
                    lower="${limit_1_low + joint_safety_margin}"
                    upper="${limit_1_up  - joint_safety_margin}"/>
             <axis xyz="0 1 0"/>
@@ -537,7 +539,7 @@
 
         <joint name="finger_${finger_num}/joint_2" type="revolute">
             <axis xyz="0 1 0"/>
-            <limit effort="15" velocity="7"
+            <limit effort="${joint_effort}" velocity="${joint_velocity}"
                    lower="${limit_2_low + joint_safety_margin}"
                    upper="${limit_2_up  - joint_safety_margin}"/>
             <parent link="finger_${finger_num}/link_1"/>
@@ -590,7 +592,7 @@
 
         <joint name="finger_${finger_num}/joint_3" type="revolute">
             <axis xyz="0 1 0"/>
-            <limit effort="15" velocity="7"
+            <limit effort="${joint_effort}" velocity="${joint_velocity}"
                    lower="${limit_3_low + joint_safety_margin}"
                    upper="${limit_3_up  - joint_safety_margin}"/>
             <parent link="finger_${finger_num}/link_2"/>
