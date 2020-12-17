@@ -155,8 +155,12 @@ class ContactsDisplay():
                     weighted_N += normal_force * N
                     total_normal_force += normal_force
 
-            P = weighted_P / total_normal_force
-            N = weighted_N / total_normal_force
+            if total_normal_force == 0:
+                P = np.zeros((3, 1))
+                N = np.zeros((3, 1))
+            else:
+                P = weighted_P / total_normal_force
+                N = weighted_N / total_normal_force
 
             F = np.asarray([
                 data.states[0].total_wrench.force.x,

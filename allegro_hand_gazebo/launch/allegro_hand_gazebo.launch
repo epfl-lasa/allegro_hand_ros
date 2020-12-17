@@ -3,7 +3,7 @@
     <arg name="hand"/>
 
     <!-- Visualization with rviz. Default is false. -->
-    <arg name ="visualize" default="false" />
+    <arg name ="visualize" default="true" />
 
     <!-- Select the robot -->
     <arg name="robot_name" default="allegro_hand_$(arg hand)"/>
