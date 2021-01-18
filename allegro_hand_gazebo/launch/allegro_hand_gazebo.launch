@@ -14,6 +14,9 @@
     <!-- Is this Gazebo Client? -->
     <arg name="gzclient" default="false"/>
 
+    <!-- Input using keyboard? -->
+    <arg name="keyboard" default="true"/>
+
     <!-- Global z offset -->
     <arg name="global_z" default="0"/>
 
@@ -47,7 +50,7 @@
         args="-d $(find allegro_hand_description)/allegro_hand_config.rviz" >
     </node>
     <node if="$(arg visualize)" 
-        ns="$(arg robot_name)" name="rviz_gazebo_contacts"
+        ns="$(arg robot_name)" name="$(arg robot_name)_rviz_gazebo_contacts"
         pkg="allegro_hand_gazebo" type="rviz_gazebo_contacts.py" output="screen"/>
 
     <!-- Launch Gazebo if not client -->
@@ -67,6 +70,19 @@
         args="-urdf -model $(arg robot_name) -param /$(arg robot_name)/robot_description
                 -z $(arg global_z)"
     />
+
+    <!-- Keyboard input -->
+    <node if="$(arg keyboard)"
+        name="$(arg robot_name)_keyboard_handler"
+        pkg="allegro_hand_keyboard"
+        type="allegro_hand_keyboard_node"
+        output="screen"
+        >
+        <remap from="allegroHand/lib_cmd" to="$(arg robot_name)/lib_cmd"/>
+    </node>
+    <node if="$(arg keyboard)"
+        ns="$(arg robot_name)" name="$(arg robot_name)_gazebo_keyboard_cmd"
+        pkg="allegro_hand_gazebo" type="gazebo_keyboard_cmd.py" output="screen"/>
 
     <!-- Spawn Gazebo Controllers -->
     <!-- <include file="$(find timed_roslaunch)/launch/timed_roslaunch.launch">

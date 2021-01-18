@@ -176,8 +176,8 @@ if __name__ == '__main__':
     rospy.init_node('rviz_gazebo_contacts', anonymous=True)
     rate = rospy.Rate(30)
     
-    # ns = rospy.get_namespace()
-    ns = "/allegro_hand_right/"
+    ns = rospy.get_namespace()
+    # ns = "/allegro_hand_right/"
     contact_display = ContactsDisplay(ns, links)
 
     while not rospy.is_shutdown():
