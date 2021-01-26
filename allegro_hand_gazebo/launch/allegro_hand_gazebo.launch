@@ -15,7 +15,8 @@
     <arg name="gzclient" default="false"/>
 
     <!-- Input using keyboard? -->
-    <arg name="keyboard" default="true"/>
+    <arg name="keyboard" default="false"/>
+    <arg name="cyberglove" default="true"/>
 
     <!-- Global z offset -->
     <arg name="global_z" default="0"/>
@@ -83,6 +84,13 @@
     <node if="$(arg keyboard)"
         ns="$(arg robot_name)" name="$(arg robot_name)_gazebo_keyboard_cmd"
         pkg="allegro_hand_gazebo" type="gazebo_keyboard_cmd.py" output="screen"/>
+
+    <!-- Cyberglove input -->
+    <node if="$(arg cyberglove)"
+        ns="$(arg robot_name)" name="$(arg robot_name)_gazebo_cyberglove_cmd"
+        pkg="allegro_hand_gazebo" type="gazebo_cyberglove_cmd.py" output="screen">
+        <remap from="/cyberglove/joint_states" to="/cyberglove/human_hand/joint_states"/>
+    </node>
 
     <!-- Spawn Gazebo Controllers -->
     <!-- <include file="$(find timed_roslaunch)/launch/timed_roslaunch.launch">
