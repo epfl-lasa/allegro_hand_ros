@@ -79,10 +79,6 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        allegro_hand_base:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         finger_0/link_0:
           Alpha: 1
           Show Axes: false
@@ -188,6 +184,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
       Name: RobotModel
       Robot Description: /allegro_hand_right/robot_description
       TF Prefix: ""
@@ -214,7 +214,7 @@ Visualization Manager:
   Global Options:
     Background Color: 130; 130; 130
     Default Light: true
-    Fixed Frame: allegro_hand_base
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:

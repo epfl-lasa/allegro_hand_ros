@@ -14,7 +14,7 @@
     <!-- Is this Gazebo Client? -->
     <arg name="gzclient" default="false"/>
 
-    <!-- Input using keyboard? -->
+    <!-- Input using keyboard/cyberglove -->
     <arg name="keyboard" default="false"/>
     <arg name="cyberglove" default="true"/>
 
@@ -51,7 +51,7 @@
         args="-d $(find allegro_hand_description)/allegro_hand_config.rviz" >
     </node>
     <node if="$(arg visualize)" 
-        ns="$(arg robot_name)" name="$(arg robot_name)_rviz_gazebo_contacts"
+        ns="$(arg robot_name)" name="rviz_gazebo_contacts"
         pkg="allegro_hand_gazebo" type="rviz_gazebo_contacts.py" output="screen"/>
 
     <!-- Launch Gazebo if not client -->
@@ -66,43 +66,39 @@
     </include>
 
     <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-    <node name="$(arg robot_name)_urdf_spawner" pkg="gazebo_ros"
+    <node ns="$(arg robot_name)" name="urdf_spawner" pkg="gazebo_ros"
         type="spawn_model" respawn="false" output="screen"
-        args="-urdf -model $(arg robot_name) -param /$(arg robot_name)/robot_description
+        args="-urdf -model $(arg robot_name) -param robot_description
                 -z $(arg global_z)"
     />
 
     <!-- Keyboard input -->
-    <node if="$(arg keyboard)"
-        name="$(arg robot_name)_keyboard_handler"
-        pkg="allegro_hand_keyboard"
-        type="allegro_hand_keyboard_node"
-        output="screen"
-        >
-        <remap from="allegroHand/lib_cmd" to="$(arg robot_name)/lib_cmd"/>
-    </node>
-    <node if="$(arg keyboard)"
-        ns="$(arg robot_name)" name="$(arg robot_name)_gazebo_keyboard_cmd"
-        pkg="allegro_hand_gazebo" type="gazebo_keyboard_cmd.py" output="screen"/>
+    <group if="$(arg keyboard)"> 
+        <node ns="$(arg robot_name)" name="keyboard_handler"
+            pkg="allegro_hand_keyboard"
+            type="allegro_hand_keyboard_node"
+            output="screen"
+            >
+            <remap from="allegroHand/lib_cmd" to="lib_cmd"/>
+        </node>
+        <node ns="$(arg robot_name)" name="gazebo_keyboard_cmd"
+            pkg="allegro_hand_gazebo" type="gazebo_keyboard_cmd.py" output="screen"
+        />
+    </group>
 
     <!-- Cyberglove input -->
     <node if="$(arg cyberglove)"
-        ns="$(arg robot_name)" name="$(arg robot_name)_gazebo_cyberglove_cmd"
+        ns="$(arg robot_name)" name="gazebo_cyberglove_cmd"
         pkg="allegro_hand_gazebo" type="gazebo_cyberglove_cmd.py" output="screen">
         <remap from="/cyberglove/joint_states" to="/cyberglove/human_hand/joint_states"/>
     </node>
 
-    <!-- Spawn Gazebo Controllers -->
-    <!-- <include file="$(find timed_roslaunch)/launch/timed_roslaunch.launch">
-        <arg name="time" value="2" />
-        <arg name="pkg" value="turtlebot_navigation" />
-        <arg name="file" value="amcl_demo.launch" />
-        <arg name="value"
-            value="robot_name:=$(arg robot_name)
-                   controller:=$(arg controller)"
-        />
-    </include> -->
+    <!-- Joint Space input -->
+    <node ns="$(arg robot_name)" name="gazebo_joint_state_cmd"
+        pkg="allegro_hand_gazebo" type="gazebo_joint_state_cmd.py" output="screen"
+    />
 
+    <!-- Spawn Gazebo Controllers -->
     <include file="$(find allegro_hand_controllers)/launch/allegro_hand_control.launch">
         <arg name="robot_name" value="$(arg robot_name)"/>
         <arg name="controller" value="$(arg controller)"/>

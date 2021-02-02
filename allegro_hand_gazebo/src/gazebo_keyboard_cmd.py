@@ -85,15 +85,14 @@ if __name__ == '__main__':
     rate = rospy.Rate(30)
     
     ns = rospy.get_namespace()
-    # ns = "/allegro_hand_right/"
     rospy.Subscriber(
-        ns + "lib_cmd",
+        "lib_cmd",
         String,
         keyboard_callback,
         queue_size=1
     )
 
-    publisher = rospy.Publisher(ns+"PositionController/command", Float64MultiArray, queue_size=1)
+    publisher = rospy.Publisher("PositionController/command", Float64MultiArray, queue_size=1)
 
     while not rospy.is_shutdown():
         if TARGET_UPDATED:

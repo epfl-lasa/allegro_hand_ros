@@ -15,7 +15,7 @@ JOINT_SPECS = {
 }
 
 
-# ----- Joint Map -----
+# ----- Joint Map and Name-----
 JOINT_MAP = [
     "index_abduction_joint",
     "index_proximal_joint",
@@ -34,17 +34,33 @@ JOINT_MAP = [
     "thumb_middle_joint",
     "thumb_distal_joint",
 ]
-
+NAME = [
+    "finger_0/joint_0",
+    "finger_0/joint_1",
+    "finger_0/joint_2",
+    "finger_0/joint_3",
+    "finger_1/joint_0",
+    "finger_1/joint_1",
+    "finger_1/joint_2",
+    "finger_1/joint_3",
+    "finger_2/joint_0",
+    "finger_2/joint_1",
+    "finger_2/joint_2",
+    "finger_2/joint_3",
+    "finger_3/joint_0",
+    "finger_3/joint_1",
+    "finger_3/joint_2",
+    "finger_3/joint_3",
+]
 
 # ----- Global Variables -----
-TARGET_UPDATED = False
 TARGET = deque(maxlen=1)
 TARGET.append(np.zeros(16))
 
 
 # ----- Callback -----
 def cyberglove_callback(data):
-    global TARGET, TARGET_UPDATED
+    global TARGET
     pos = [data.position[data.name.index(JOINT_MAP[i])] for i in range(16)] * JOINT_SPECS['dir']
     TARGET.append(np.minimum(JOINT_SPECS['max'], np.maximum(JOINT_SPECS['min'], pos)))
 
@@ -54,8 +70,6 @@ if __name__ == '__main__':
     rospy.init_node('gazebo_cyberglove_cmd', anonymous=True)
     rate = rospy.Rate(30)
     
-    ns = rospy.get_namespace()
-    # ns = "/allegro_hand_right/"
     rospy.Subscriber(
         "/cyberglove/joint_states",
         JointState,
@@ -63,10 +77,11 @@ if __name__ == '__main__':
         queue_size=1
     )
 
-    publisher = rospy.Publisher(ns + "PositionController/command", Float64MultiArray, queue_size=1)
+    publisher = rospy.Publisher("joint_cmd", JointState, queue_size=1)
 
     while not rospy.is_shutdown():
-        msg = Float64MultiArray()
-        msg.data = np.mean(TARGET, axis=0)
+        msg = JointState()
+        msg.name = NAME
+        msg.position = np.mean(TARGET, axis=0)
         publisher.publish(msg)
         rate.sleep()

@@ -4,9 +4,9 @@
       or by including it in another launch file.
   -->
 
-  <arg name="NUM" default='0'/>
+  <arg name="robot_name" default="allegro_hand"/>
 
-  <node name="rviz_$(arg NUM)"
+  <node ns="$(arg robot_name)" name="rviz"
         pkg="rviz" type="rviz"
         args="-d $(find allegro_hand_description)/allegro_hand_config.rviz" >
   </node>

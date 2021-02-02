@@ -9,7 +9,7 @@ hand_info:
   manufacturer: 'Wonikrobotics Co. Ltd.'
   origin: 'Seoul, South Korea'
   serial: 'SAH030K069R'
-  version: v3.0
+  version: 3.0
 
 zero:
   encoder_offset:

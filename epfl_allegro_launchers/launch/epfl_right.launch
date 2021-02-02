@@ -1,8 +1,7 @@
 <launch>
 
   <arg name="HAND" value="right" />
-  <arg name="NUM" default="1" />
-  <arg name="CONTROLLER" default="grasp" />
+  <arg name="CONTROLLER" default="grasp" /> <!-- grasp torque -->
   <arg name="RESPAWN" default="true" />
   <arg name="VISUALIZE" default="true" />
   <arg name="ZEROS" default="$(find allegro_hand_parameters)/zero_files/zero_SAH030K069R.yaml" />
@@ -13,8 +12,8 @@
   <arg name="GAZEBO" default="false" />  <!--use at your own risk-->
 
   <include file="$(find allegro_hand)/launch/allegro_hand.launch">
+    <arg name="robot_name" value="allegro_hand_$(arg HAND)"/>
     <arg name="HAND" value="$(arg HAND)"/>
-    <arg name="NUM" value="$(arg NUM)"/>
     <arg name="CONTROLLER" value="$(arg CONTROLLER)"/>
     <arg name="RESPAWN" value="$(arg RESPAWN)"/>
     <arg name="VISUALIZE" value="$(arg VISUALIZE)"/>
