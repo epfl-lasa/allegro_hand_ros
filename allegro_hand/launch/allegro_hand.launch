@@ -63,6 +63,9 @@
     <arg name="PARAMS_DIR" default="$(find allegro_hand_parameters)" />
     <arg name="KEYBOARD" default="true" />
 
+    <!-- Input using cyberglove -->
+    <arg name="cyberglove" default="false"/>
+
     <!-- yaml param files for your hand can be found in parameters/zero_files/ -->
     <arg name="ZEROS" default="$(arg PARAMS_DIR)/zero.yaml"/>
 
@@ -161,6 +164,13 @@
         output="screen"
         if="$(arg KEYBOARD)">
         <remap from="allegroHand/lib_cmd" to="lib_cmd"/>
+    </node>
+
+    <!-- Cyberglove input -->
+    <node if="$(arg cyberglove)"
+        ns="$(arg robot_name)" name="cyberglove_cmd"
+        pkg="allegro_hand_cyberglove" type="cyberglove_controller.py" output="screen">
+        <remap from="/cyberglove/joint_states" to="/cyberglove/human_hand/joint_states"/>
     </node>
 
     <!-- Gazebo support is very experimental at the moment. -->

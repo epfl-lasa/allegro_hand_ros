@@ -15,8 +15,8 @@
     <arg name="gzclient" default="false"/>
 
     <!-- Input using keyboard/cyberglove -->
-    <arg name="keyboard" default="false"/>
-    <arg name="cyberglove" default="true"/>
+    <arg name="keyboard" default="true"/>
+    <arg name="cyberglove" default="false"/>
 
     <!-- Global z offset -->
     <arg name="global_z" default="0"/>
@@ -88,8 +88,8 @@
 
     <!-- Cyberglove input -->
     <node if="$(arg cyberglove)"
-        ns="$(arg robot_name)" name="gazebo_cyberglove_cmd"
-        pkg="allegro_hand_gazebo" type="gazebo_cyberglove_cmd.py" output="screen">
+        ns="$(arg robot_name)" name="cyberglove_cmd"
+        pkg="allegro_hand_cyberglove" type="cyberglove_controller.py" output="screen">
         <remap from="/cyberglove/joint_states" to="/cyberglove/human_hand/joint_states"/>
     </node>
 
