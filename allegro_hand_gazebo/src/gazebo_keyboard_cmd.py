@@ -7,7 +7,7 @@ from std_msgs.msg import String, Float64MultiArray
 JOINT_VALUES = {
     "pdControl": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     "home": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-    "ready": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "ready": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],     # Ready Pose
     "grasp_3": [-0.2, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.3, 0.4, 0.7, 0.9],  # 3 finger grasp
     "grasp_4": [-0.2, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.2, 1.0, 1.0, 1.0, 1.3, 0.6, 0.7, 0.9],  # 4 finger grasp
     "pinch_it": [0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.4, 0.0, 0.6, 0.8],  # Index finger pinch
@@ -19,8 +19,6 @@ JOINT_VALUES = {
 }
 
 # ----- Global Variables -----
-MOVING = False
-TARGET_UPDATED = False
 TARGET = JOINT_VALUES["home"]
 
 
@@ -31,11 +29,9 @@ def keyboard_callback(data):
     Args:
         data (String): ROS `String` message
     """
-    global TARGET_UPDATED, TARGET
-    if ~MOVING:
-        TARGET_UPDATED = True
-        # Check if known target, otherwise go to home
-        TARGET = JOINT_VALUES.get(data.data, JOINT_VALUES["home"])
+    global TARGET
+    # Check if known target, otherwise go to home
+    TARGET = JOINT_VALUES.get(data.data, JOINT_VALUES["home"])
 
 
 # ----- Main Script -----
@@ -57,10 +53,8 @@ if __name__ == '__main__':
     )
 
     while not rospy.is_shutdown():
-        if TARGET_UPDATED:
-            # If target is updated, go to new target
-            msg = Float64MultiArray()
-            msg.data = TARGET
-            publisher.publish(msg)
-            TARGET_UPDATED = False
+        msg = Float64MultiArray()
+        msg.data = TARGET
+        publisher.publish(msg)
+        TARGET_UPDATED = False
         rate.sleep()
