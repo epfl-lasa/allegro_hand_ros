@@ -10,3 +10,4 @@ Launch node `cyberglove_controller.py` under the allegro hand namespace. Remap `
 
 ## Authors/Maintainers
 - [Vaibhav Gupta](https://github.com/guptavaibhav0)
+- [Saurav Aryan](https://github.com/aryansaurav) (Maintainer)

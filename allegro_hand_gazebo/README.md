@@ -12,7 +12,7 @@ roslaunch allegro_hand_gazebo allegro_hand_gazebo.launch
 1. [`allegro_hand_gazebo.launch`](launch/allegro_hand_gazebo.launch)
 This is the main launch file to launch gazebo simulation.
 Arguments:
-    - `hand` (str) {needed} &rightarrow; One of {'right', 'left'},  currently only 'right' is supported
+    - `hand` (str) {mandatory} &rightarrow; One of {'right', 'left'},  currently only 'right' is supported
     - `visualize` (bool) &rightarrow; Run rviz visualization
     - `robot_name` (str) &rightarrow; Name for allegro hand
     - `controller` (str) &rightarrow; Controller for Gazebo, one of {'TorqueController', 'PositionTorqueController', 'PositionController'}
@@ -24,3 +24,4 @@ Arguments:
 
 ## Authors/Maintainers
 - [Vaibhav Gupta](https://github.com/guptavaibhav0)
+- [Saurav Aryan](https://github.com/aryansaurav) (Maintainer)
