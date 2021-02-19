@@ -33,6 +33,7 @@ from pynput import keyboard
 
 # ----- Global Variables -----
 class Global:
+    calibration_type = "base"   # {base, center, thumb}
     messages = deque(maxlen=1)  # only store latest sensor value
     done_recording = False
     to_record = False
@@ -42,10 +43,20 @@ class Global:
 
 # ----- Callbacks -----
 def cyberglove_callback(data):
+    """Save the messages from the cyberglove
+
+    Args:
+        data (JointState): message from cyberglove driver
+    """
     Global.messages.append(data)
 
 
 def keyboard_callback(todo):
+    """Start or stop recording based on keyboard input
+
+    Args:
+        todo (str): One of {'record', 'stop'}
+    """
     if todo == "record":
         Global.to_record = True
     elif todo == "stop":
@@ -53,26 +64,22 @@ def keyboard_callback(todo):
 
 
 # ----- Helper Functions -----
-def write_to_file(filename, names, positions):
-    print(colored("Writing to {:s}...".format(filename), "cyan"))
-    with open(filename, "w") as f:
-        f.write('\n'.join([
-            '{:s} {:.6f}'.format(n, p)
-            for n, p in zip(names, positions)
-        ]))
-
-
 def record_data():
     """Record data for callibration"""
     current_target = 0
     rospy.loginfo(
-        "Press %s to record the point or %s to stop...",
+        "Press %s to record the point, or %s to stop and save data...",
         colored("<F2>", "yellow"),
         colored("<esc>", "red"),
     )
     while not Global.done_recording:
+        if rospy.is_shutdown():
+            # Quit if ROS is shutdown
+            return
+
         if Global.to_record:
             try:
+                # Store the data from message and reset `to_record` flag
                 msg = Global.messages.pop()
                 Global.data.append(np.array(msg.position))
                 current_target = current_target + 1
@@ -82,17 +89,20 @@ def record_data():
                 # No message yet from the sensor
                 pass
 
+    # Save the data to a file
     rospy.loginfo(colored("Saving file...", "green"))
     np.savez(
-        os.path.join(os.path.dirname(__file__), 'test_xyz_thumb.npz'),
+        os.path.join(os.path.dirname(__file__),
+                     "allegro_{:s}.npz".format(Global.calibration_type)),
         data=np.array(Global.data),
     )
 
 
 # ----- Main function -----
 def main():
+    """Main logic for calibration"""
     rospy.init_node('calibration_listener', anonymous=True)
-    rospy.Subscriber("/allegro_hand_right/joint_states", JointState, cyberglove_callback)
+    rospy.Subscriber("joint_states", JointState, cyberglove_callback)
 
     # Keyboard Listener
     listener = keyboard.GlobalHotKeys({
@@ -101,10 +111,6 @@ def main():
     })
     listener.start()
 
-    rospy.loginfo(colored(
-        "Please put your fingers in as close configuration as shown in rviz.",
-        "yellow"
-    ))
     record_data()
 
 

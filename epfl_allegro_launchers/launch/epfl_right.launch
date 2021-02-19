@@ -11,9 +11,10 @@
   <arg name="KEYBOARD" default="false" />
   <arg name="cyberglove" default="true" />
   <arg name="GAZEBO" default="false" />  <!--use at your own risk-->
+  <arg name="robot_name" default="allegro_hand_$(arg HAND)"/>
 
   <include file="$(find allegro_hand)/launch/allegro_hand.launch">
-    <arg name="robot_name" value="allegro_hand_$(arg HAND)"/>
+    <arg name="robot_name" value="$(arg robot_name)"/>
     <arg name="HAND" value="$(arg HAND)"/>
     <arg name="CONTROLLER" value="$(arg CONTROLLER)"/>
     <arg name="RESPAWN" value="$(arg RESPAWN)"/>

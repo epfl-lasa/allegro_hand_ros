@@ -1,0 +1,15 @@
+<launch>
+    <arg name="robot_name" default="allegro_hand_right"/>
+
+    <!-- Launch Allegro Hand -->
+    <include file="$(find epfl_allegro_launchers)/launch/epfl_right.launch">
+        <arg name="robot_name" value="$(arg robot_name)"/>
+    </include>
+
+    <!-- Calibration Node -->
+    <node ns="$(arg robot_name)"
+        pkg="cyberglove" name="calibrate"
+        type="calibrate_thumb.py" output="screen"
+        required="true"
+    />
+</launch>
