@@ -116,7 +116,7 @@
     </node>
 
     <!-- Joint Space input -->
-    <node unless="$(eval keyboard or cyberglove)"
+    <node unless="$(eval keyboard)"
         ns="$(arg robot_name)" name="gazebo_joint_state_cmd"
         pkg="allegro_hand_gazebo" type="gazebo_joint_state_cmd.py" output="screen"
     />
